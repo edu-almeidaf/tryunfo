@@ -13,6 +13,7 @@ class App extends React.Component {
     cardRare: 'normal',
     cardTrunfo: false,
     isSaveButtonDisabled: true,
+    cards: [],
   };
 
   onInputChange = ({ target }) => {
@@ -22,21 +23,6 @@ class App extends React.Component {
       [name]: value,
     }, this.validateFields);
   };
-
-  // validateFields = () => {
-  //   const { title, description } = this.state;
-  //   const MIN_TITLE_LENGTH = 4;
-  //   const MIN_DESCRIPTION_LENGTH = 10;
-  //   if (title.length > MIN_TITLE_LENGTH && description.length > MIN_DESCRIPTION_LENGTH) {
-  //     this.setState ({
-  //       disableButton: false,
-  //     })
-  //   } else {
-  //     this.setState ({
-  //       disableButton: true,
-  //     })
-  //   }
-  // }
 
   validateFields = () => {
     const {
@@ -76,6 +62,41 @@ class App extends React.Component {
     }
   };
 
+  onSaveButtonClick = () => {
+    const {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+      cardTrunfo,
+    } = this.state;
+
+    const card = {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+      cardTrunfo,
+    };
+
+    this.setState((prevState) => ({
+      cards: [...prevState.cards, card],
+      cardName: '',
+      cardDescription: '',
+      cardImage: '',
+      cardAttr1: '0',
+      cardAttr2: '0',
+      cardAttr3: '0',
+      cardRare: 'normal',
+    }));
+  };
+
   render() {
     const {
       cardName,
@@ -102,6 +123,7 @@ class App extends React.Component {
           cardTrunfo={ cardTrunfo }
           onInputChange={ this.onInputChange }
           isSaveButtonDisabled={ isSaveButtonDisabled }
+          onSaveButtonClick={ this.onSaveButtonClick }
         />
         <Card
           cardName={ cardName }
