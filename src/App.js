@@ -18,6 +18,7 @@ class App extends React.Component {
     hasTrunfo: false,
     cardDelete: true,
     nameFilter: '',
+    rareFilter: 'todas',
   };
 
   onInputChange = ({ target }) => {
@@ -27,6 +28,29 @@ class App extends React.Component {
       [name]: value,
     }, this.validateFields);
   };
+
+  filterByValue = ({ target }) => {
+    const { name } = target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  // filterByValue = ({ target }) => {
+  //   const { name } = target;
+  //   let value;
+  //   if (target.type === 'checkbox') {
+  //     value = target.checked;
+  //   } else if (target.value === 'todas') {
+  //     value = '';
+  //   } else {
+  //     value = target.value;
+  //   }
+  //   this.setState({
+  //     [name]: value,
+  //   });
+  // };
 
   validateFields = () => {
     const {
@@ -118,12 +142,6 @@ class App extends React.Component {
     }, this.verifyTrunfo);
   };
 
-  filterByName = ({ target }) => {
-    this.setState({
-      nameFilter: target.value,
-    });
-  };
-
   render() {
     const {
       cardName,
@@ -139,6 +157,7 @@ class App extends React.Component {
       hasTrunfo,
       cardDelete,
       nameFilter,
+      rareFilter,
     } = this.state;
     return (
       <div>
@@ -159,7 +178,8 @@ class App extends React.Component {
         />
         <Filters
           nameFilter={ nameFilter }
-          filterByName={ this.filterByName }
+          rareFilter={ rareFilter }
+          filterByValue={ this.filterByValue }
         />
         <Card
           cardName={ cardName }
@@ -176,6 +196,8 @@ class App extends React.Component {
             .filter((card) => (
               card.cardName.toLowerCase().includes(nameFilter.toLowerCase())
             ))
+            .filter((card) => (
+              rareFilter === 'todas' ? true : card.cardRare === rareFilter))
             .map((card, index) => (
               <Card
                 key={ card.cardName }
