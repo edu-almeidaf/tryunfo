@@ -104,9 +104,7 @@ class App extends React.Component {
       cardAttr3: '0',
       cardRare: 'normal',
       cardTrunfo: false,
-    }));
-
-    this.verifyTrunfo();
+    }), this.verifyTrunfo);
   };
 
   render() {
