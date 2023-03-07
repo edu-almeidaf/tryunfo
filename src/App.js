@@ -15,6 +15,7 @@ class App extends React.Component {
     isSaveButtonDisabled: true,
     cards: [],
     hasTrunfo: false,
+    cardDelete: true,
   };
 
   onInputChange = ({ target }) => {
@@ -107,6 +108,14 @@ class App extends React.Component {
     }), this.verifyTrunfo);
   };
 
+  removeCard = (indexToRemove) => {
+    const { cards } = this.state;
+    const newCards = cards.filter((_card, index) => index !== indexToRemove);
+    this.setState({
+      cards: newCards,
+    }, this.verifyTrunfo);
+  };
+
   render() {
     const {
       cardName,
@@ -120,6 +129,7 @@ class App extends React.Component {
       isSaveButtonDisabled,
       cards,
       hasTrunfo,
+      cardDelete,
     } = this.state;
     return (
       <div>
@@ -149,7 +159,7 @@ class App extends React.Component {
           cardTrunfo={ cardTrunfo }
         />
         {
-          cards.map((card) => (
+          cards.map((card, index) => (
             <Card
               key={ card.cardName }
               cardName={ card.cardName }
@@ -160,6 +170,8 @@ class App extends React.Component {
               cardImage={ card.cardImage }
               cardRare={ card.cardRare }
               cardTrunfo={ card.cardTrunfo }
+              cardDelete={ cardDelete }
+              removeCard={ () => this.removeCard(index) }
             />
           ))
         }
