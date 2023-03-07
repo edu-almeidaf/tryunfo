@@ -6,7 +6,9 @@ class Filters extends Component {
     const {
       nameFilter,
       rareFilter,
+      trunfoFilter,
       filterByValue,
+      filterDisabled,
     } = this.props;
     return (
       <section className="filters">
@@ -18,6 +20,7 @@ class Filters extends Component {
           placeholder="Filtrar por nome"
           data-testid="name-filter"
           onChange={ filterByValue }
+          disabled={ filterDisabled }
         />
 
         <label htmlFor="">
@@ -26,12 +29,24 @@ class Filters extends Component {
             data-testid="rare-filter"
             value={ rareFilter }
             onChange={ filterByValue }
+            disabled={ filterDisabled }
           >
             <option value="todas">Todas</option>
             <option value="normal">Normal</option>
             <option value="raro">Raro</option>
             <option value="muito raro">Muito Raro</option>
           </select>
+        </label>
+
+        <label htmlFor="">
+          Super Trunfo
+          <input
+            type="checkbox"
+            data-testid="trunfo-filter"
+            name="trunfoFilter"
+            checked={ trunfoFilter }
+            onChange={ filterByValue }
+          />
         </label>
       </section>
     );
@@ -41,7 +56,9 @@ class Filters extends Component {
 Filters.propTypes = {
   nameFilter: PropTypes.string.isRequired,
   rareFilter: PropTypes.string.isRequired,
+  trunfoFilter: PropTypes.bool.isRequired,
   filterByValue: PropTypes.func.isRequired,
+  filterDisabled: PropTypes.func.isRequired,
 };
 
 export default Filters;

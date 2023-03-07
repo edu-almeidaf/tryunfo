@@ -19,6 +19,8 @@ class App extends React.Component {
     cardDelete: true,
     nameFilter: '',
     rareFilter: 'todas',
+    trunfoFilter: false,
+    filterDisabled: false,
   };
 
   onInputChange = ({ target }) => {
@@ -29,12 +31,25 @@ class App extends React.Component {
     }, this.validateFields);
   };
 
+  verifyTrunfoFilter = () => {
+    const { trunfoFilter } = this.state;
+    if (trunfoFilter) {
+      this.setState({
+        filterDisabled: true,
+      });
+    } else {
+      this.setState({
+        filterDisabled: false,
+      });
+    }
+  };
+
   filterByValue = ({ target }) => {
     const { name } = target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     this.setState({
       [name]: value,
-    });
+    }, this.verifyTrunfoFilter);
   };
 
   // filterByValue = ({ target }) => {
@@ -158,6 +173,8 @@ class App extends React.Component {
       cardDelete,
       nameFilter,
       rareFilter,
+      trunfoFilter,
+      filterDisabled,
     } = this.state;
     return (
       <div>
@@ -179,7 +196,9 @@ class App extends React.Component {
         <Filters
           nameFilter={ nameFilter }
           rareFilter={ rareFilter }
+          trunfoFilter={ trunfoFilter }
           filterByValue={ this.filterByValue }
+          filterDisabled={ filterDisabled }
         />
         <Card
           cardName={ cardName }
@@ -198,6 +217,7 @@ class App extends React.Component {
             ))
             .filter((card) => (
               rareFilter === 'todas' ? true : card.cardRare === rareFilter))
+            .filter((card) => card.cardTrunfo === trunfoFilter)
             .map((card, index) => (
               <Card
                 key={ card.cardName }
