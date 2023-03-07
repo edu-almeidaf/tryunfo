@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from './components/Card';
+import Filters from './components/Filters';
 import Form from './components/Form';
 
 class App extends React.Component {
@@ -16,6 +17,7 @@ class App extends React.Component {
     cards: [],
     hasTrunfo: false,
     cardDelete: true,
+    nameFilter: '',
   };
 
   onInputChange = ({ target }) => {
@@ -116,6 +118,12 @@ class App extends React.Component {
     }, this.verifyTrunfo);
   };
 
+  filterByName = ({ target }) => {
+    this.setState({
+      nameFilter: target.value,
+    });
+  };
+
   render() {
     const {
       cardName,
@@ -130,6 +138,7 @@ class App extends React.Component {
       cards,
       hasTrunfo,
       cardDelete,
+      nameFilter,
     } = this.state;
     return (
       <div>
@@ -148,6 +157,10 @@ class App extends React.Component {
           onSaveButtonClick={ this.onSaveButtonClick }
           hasTrunfo={ hasTrunfo }
         />
+        <Filters
+          nameFilter={ nameFilter }
+          filterByName={ this.filterByName }
+        />
         <Card
           cardName={ cardName }
           cardDescription={ cardDescription }
@@ -159,21 +172,25 @@ class App extends React.Component {
           cardTrunfo={ cardTrunfo }
         />
         {
-          cards.map((card, index) => (
-            <Card
-              key={ card.cardName }
-              cardName={ card.cardName }
-              cardDescription={ card.cardDescription }
-              cardAttr1={ card.cardAttr1 }
-              cardAttr2={ card.cardAttr2 }
-              cardAttr3={ card.cardAttr3 }
-              cardImage={ card.cardImage }
-              cardRare={ card.cardRare }
-              cardTrunfo={ card.cardTrunfo }
-              cardDelete={ cardDelete }
-              removeCard={ () => this.removeCard(index) }
-            />
-          ))
+          cards
+            .filter((card) => (
+              card.cardName.toLowerCase().includes(nameFilter.toLowerCase())
+            ))
+            .map((card, index) => (
+              <Card
+                key={ card.cardName }
+                cardName={ card.cardName }
+                cardDescription={ card.cardDescription }
+                cardAttr1={ card.cardAttr1 }
+                cardAttr2={ card.cardAttr2 }
+                cardAttr3={ card.cardAttr3 }
+                cardImage={ card.cardImage }
+                cardRare={ card.cardRare }
+                cardTrunfo={ card.cardTrunfo }
+                cardDelete={ cardDelete }
+                removeCard={ () => this.removeCard(index) }
+              />
+            ))
         }
       </div>
     );
