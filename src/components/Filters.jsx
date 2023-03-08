@@ -7,7 +7,7 @@ class Filters extends Component {
       nameFilter,
       rareFilter,
       trunfoFilter,
-      filterByValue,
+      onInputChange,
       filterDisabled,
     } = this.props;
     return (
@@ -19,7 +19,7 @@ class Filters extends Component {
           value={ nameFilter }
           placeholder="Filtrar por nome"
           data-testid="name-filter"
-          onChange={ filterByValue }
+          onChange={ onInputChange }
           disabled={ filterDisabled }
         />
 
@@ -28,7 +28,7 @@ class Filters extends Component {
             name="rareFilter"
             data-testid="rare-filter"
             value={ rareFilter }
-            onChange={ filterByValue }
+            onChange={ onInputChange }
             disabled={ filterDisabled }
           >
             <option value="todas">Todas</option>
@@ -45,7 +45,7 @@ class Filters extends Component {
             data-testid="trunfo-filter"
             name="trunfoFilter"
             checked={ trunfoFilter }
-            onChange={ filterByValue }
+            onChange={ onInputChange }
           />
         </label>
       </section>
@@ -57,7 +57,7 @@ Filters.propTypes = {
   nameFilter: PropTypes.string.isRequired,
   rareFilter: PropTypes.string.isRequired,
   trunfoFilter: PropTypes.bool.isRequired,
-  filterByValue: PropTypes.func.isRequired,
+  onInputChange: PropTypes.func.isRequired,
   filterDisabled: PropTypes.bool.isRequired,
 };
 

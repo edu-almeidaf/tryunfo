@@ -28,7 +28,10 @@ class App extends React.Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     this.setState({
       [name]: value,
-    }, this.validateFields);
+    }, () => {
+      this.validateFields();
+      this.verifyTrunfoFilter();
+    });
   };
 
   verifyTrunfoFilter = () => {
@@ -44,29 +47,6 @@ class App extends React.Component {
     }
   };
 
-  filterByValue = ({ target }) => {
-    const { name } = target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({
-      [name]: value,
-    }, this.verifyTrunfoFilter);
-  };
-
-  // filterByValue = ({ target }) => {
-  //   const { name } = target;
-  //   let value;
-  //   if (target.type === 'checkbox') {
-  //     value = target.checked;
-  //   } else if (target.value === 'todas') {
-  //     value = '';
-  //   } else {
-  //     value = target.value;
-  //   }
-  //   this.setState({
-  //     [name]: value,
-  //   });
-  // };
-
   validateFields = () => {
     const {
       cardName,
@@ -77,19 +57,18 @@ class App extends React.Component {
       cardAttr2,
       cardAttr3,
     } = this.state;
+    const textInputs = cardName !== '' && cardDescription !== ''
+    && cardImage !== '' && cardRare !== '';
     const MIN_ATTR = 0;
     const MAX_ATTR = 90;
     const TOTAL_ATTR = 210;
     const sumAttr = Number(cardAttr1) + Number(cardAttr2) + Number(cardAttr3);
     const isLessThenMaxValue = sumAttr <= TOTAL_ATTR;
-    const verifyAttr1 = cardAttr1 >= MIN_ATTR && cardAttr1 <= MAX_ATTR;
-    const verifyAttr2 = cardAttr2 >= MIN_ATTR && cardAttr2 <= MAX_ATTR;
-    const verifyAttr3 = cardAttr3 >= MIN_ATTR && cardAttr3 <= MAX_ATTR;
+    const verifyAttr1 = Number(cardAttr1) >= MIN_ATTR && Number(cardAttr1) <= MAX_ATTR;
+    const verifyAttr2 = Number(cardAttr2) >= MIN_ATTR && Number(cardAttr2) <= MAX_ATTR;
+    const verifyAttr3 = Number(cardAttr3) >= MIN_ATTR && Number(cardAttr3) <= MAX_ATTR;
 
-    if (cardName !== ''
-    && cardDescription !== ''
-    && cardImage !== ''
-    && cardRare !== ''
+    if (textInputs
     && isLessThenMaxValue
     && verifyAttr1
     && verifyAttr2
@@ -146,7 +125,9 @@ class App extends React.Component {
       cardAttr3: '0',
       cardRare: 'normal',
       cardTrunfo: false,
-    }), this.verifyTrunfo);
+    }), () => {
+      this.verifyTrunfo();
+    });
   };
 
   removeCard = (indexToRemove) => {
@@ -156,6 +137,10 @@ class App extends React.Component {
       cards: newCards,
     }, this.verifyTrunfo);
   };
+
+  // filterCards = () => {
+  //   const { cards } = this.state;
+  // }
 
   render() {
     const {
@@ -176,6 +161,12 @@ class App extends React.Component {
       trunfoFilter,
       filterDisabled,
     } = this.state;
+
+    const renderCards = cards.filter((card) => (trunfoFilter === false ? card : card
+      .cardTrunfo === trunfoFilter))
+      .filter((card) => (rareFilter === 'todas' ? card : card
+        .cardRare === rareFilter))
+      .filter((card) => card.cardName.includes(nameFilter));
     return (
       <div>
         <h1>Tryunfo</h1>
@@ -197,7 +188,7 @@ class App extends React.Component {
           nameFilter={ nameFilter }
           rareFilter={ rareFilter }
           trunfoFilter={ trunfoFilter }
-          filterByValue={ this.filterByValue }
+          onInputChange={ this.onInputChange }
           filterDisabled={ filterDisabled }
         />
         <Card
@@ -211,13 +202,7 @@ class App extends React.Component {
           cardTrunfo={ cardTrunfo }
         />
         {
-          cards
-            .filter((card) => (
-              card.cardName.toLowerCase().includes(nameFilter.toLowerCase())
-            ))
-            .filter((card) => (
-              rareFilter === 'todas' ? true : card.cardRare === rareFilter))
-            // .filter((card) => card.cardTrunfo === trunfoFilter)
+          renderCards
             .map((card, index) => (
               <Card
                 key={ card.cardName }
