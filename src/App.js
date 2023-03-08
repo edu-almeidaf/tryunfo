@@ -21,6 +21,7 @@ class App extends React.Component {
     rareFilter: 'todas',
     trunfoFilter: false,
     filterDisabled: false,
+    renderCards: [],
   };
 
   onInputChange = ({ target }) => {
@@ -31,6 +32,7 @@ class App extends React.Component {
     }, () => {
       this.validateFields();
       this.verifyTrunfoFilter();
+      this.filterCards();
     });
   };
 
@@ -64,9 +66,9 @@ class App extends React.Component {
     const TOTAL_ATTR = 210;
     const sumAttr = Number(cardAttr1) + Number(cardAttr2) + Number(cardAttr3);
     const isLessThenMaxValue = sumAttr <= TOTAL_ATTR;
-    const verifyAttr1 = Number(cardAttr1) >= MIN_ATTR && Number(cardAttr1) <= MAX_ATTR;
-    const verifyAttr2 = Number(cardAttr2) >= MIN_ATTR && Number(cardAttr2) <= MAX_ATTR;
-    const verifyAttr3 = Number(cardAttr3) >= MIN_ATTR && Number(cardAttr3) <= MAX_ATTR;
+    const verifyAttr1 = cardAttr1 >= MIN_ATTR && cardAttr1 <= MAX_ATTR;
+    const verifyAttr2 = cardAttr2 >= MIN_ATTR && cardAttr2 <= MAX_ATTR;
+    const verifyAttr3 = cardAttr3 >= MIN_ATTR && cardAttr3 <= MAX_ATTR;
 
     if (textInputs
     && isLessThenMaxValue
@@ -127,6 +129,7 @@ class App extends React.Component {
       cardTrunfo: false,
     }), () => {
       this.verifyTrunfo();
+      this.filterCards();
     });
   };
 
@@ -135,12 +138,27 @@ class App extends React.Component {
     const newCards = cards.filter((_card, index) => index !== indexToRemove);
     this.setState({
       cards: newCards,
-    }, this.verifyTrunfo);
+    }, () => {
+      this.verifyTrunfo();
+      this.filterCards();
+    });
   };
 
-  // filterCards = () => {
-  //   const { cards } = this.state;
-  // }
+  filterCards = () => {
+    const { cards, trunfoFilter, rareFilter, nameFilter } = this.state;
+    let filterArray;
+
+    if (trunfoFilter) {
+      filterArray = cards.filter((card) => (card.cardTrunfo === trunfoFilter));
+    } else {
+      filterArray = cards.filter((card) => (rareFilter === 'todas' ? card : card
+        .cardRare === rareFilter))
+        .filter((card) => card.cardName.includes(nameFilter));
+    }
+    this.setState({
+      renderCards: filterArray,
+    });
+  };
 
   render() {
     const {
@@ -153,7 +171,7 @@ class App extends React.Component {
       cardRare,
       cardTrunfo,
       isSaveButtonDisabled,
-      cards,
+      renderCards,
       hasTrunfo,
       cardDelete,
       nameFilter,
@@ -161,12 +179,6 @@ class App extends React.Component {
       trunfoFilter,
       filterDisabled,
     } = this.state;
-
-    const renderCards = cards.filter((card) => (trunfoFilter === false ? card : card
-      .cardTrunfo === trunfoFilter))
-      .filter((card) => (rareFilter === 'todas' ? card : card
-        .cardRare === rareFilter))
-      .filter((card) => card.cardName.includes(nameFilter));
     return (
       <div>
         <h1>Tryunfo</h1>
