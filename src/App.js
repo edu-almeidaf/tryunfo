@@ -107,7 +107,7 @@ class App extends React.Component {
 
   verifyTrunfo = () => {
     const { cards } = this.state;
-    const trunfoChecked = cards.find((card) => card.cardTrunfo === true);
+    const trunfoChecked = cards.some((card) => card.cardTrunfo === true);
     this.setState({
       hasTrunfo: trunfoChecked,
     });
@@ -217,7 +217,7 @@ class App extends React.Component {
             ))
             .filter((card) => (
               rareFilter === 'todas' ? true : card.cardRare === rareFilter))
-            .filter((card) => card.cardTrunfo === trunfoFilter)
+            // .filter((card) => card.cardTrunfo === trunfoFilter)
             .map((card, index) => (
               <Card
                 key={ card.cardName }

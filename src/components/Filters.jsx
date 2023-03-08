@@ -58,7 +58,7 @@ Filters.propTypes = {
   rareFilter: PropTypes.string.isRequired,
   trunfoFilter: PropTypes.bool.isRequired,
   filterByValue: PropTypes.func.isRequired,
-  filterDisabled: PropTypes.func.isRequired,
+  filterDisabled: PropTypes.bool.isRequired,
 };
 
 export default Filters;
